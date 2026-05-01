@@ -328,7 +328,11 @@
     }
 
     function iniciarExperiencia(event) {
-      if (event) event.stopPropagation();
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
       if (experienciaIniciada) return;
       experienciaIniciada = true;
 
@@ -337,13 +341,16 @@
       activarMusica();
     }
 
-    function activarMusica() {
-      const playPromise = musica.play();
+    async function activarMusica() {
+      try {
+        musica.muted = false;
+        musica.volume = 0.8;
+        musica.currentTime = 0;
 
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Si no existe el archivo de música, la animación sigue funcionando igual.
-        });
+        await musica.play();
+        console.log("Música sonando correctamente");
+      } catch (error) {
+        console.log("No se pudo reproducir la música:", error);
       }
 
       iniciarSecuenciaMensajes();
@@ -625,7 +632,8 @@
     });
 
     playButton.addEventListener("click", iniciarExperiencia);
-    playButton.addEventListener("touchstart", iniciarExperiencia, { passive: true });
+    playButton.addEventListener("touchend", iniciarExperiencia);
+    playButton.addEventListener("pointerup", iniciarExperiencia);
 
     function animate() {
       ctx.fillStyle = "rgba(7, 17, 31, 0.16)";

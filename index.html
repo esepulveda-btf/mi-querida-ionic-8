@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Homenaje a una Psicóloga</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      touch-action: manipulation;
+      background: #07111f;
+      background-image:
+        radial-gradient(circle at 20% 15%, rgba(255, 193, 7, 0.22), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(33, 150, 243, 0.18), transparent 30%),
+        linear-gradient(180deg, #07111f 0%, #101827 55%, #1c1f26 100%);
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-title {
+      position: fixed;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      text-align: center;
+      z-index: 9;
+      pointer-events: none;
+    }
+
+    .hero-title h1 {
+      margin: 0;
+      font-size: clamp(2rem, 8vw, 5.5rem);
+      color: #ffd166;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(255, 209, 102, 0.8), 0 0 35px rgba(255, 153, 0, 0.45);
+    }
+
+    .hero-title p {
+      margin: 12px auto 0;
+      max-width: 800px;
+      color: #ffffff;
+      font-size: clamp(1rem, 3.3vw, 1.8rem);
+      font-weight: 600;
+      text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+    }
+
+    .frase-trabajo {
+      position: absolute;
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.3rem, 4.5vw, 3rem);
+      font-weight: normal;
+      text-shadow: 0 0 10px currentColor, 0 0 22px currentColor;
+      opacity: 1;
+      animation: flotar 8s ease-out forwards;
+      pointer-events: none;
+      z-index: 5;
+      transform-origin: center;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    @keyframes flotar {
+      0% { transform: translateY(0) scale(0.75) rotate(-4deg); opacity: 1; }
+      45% { transform: translateY(-65px) scale(1.08) rotate(4deg); opacity: 0.92; }
+      100% { transform: translateY(-160px) scale(1.35) rotate(0); opacity: 0; }
+    }
+
+    .mensaje-especial {
+      position: absolute;
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(1.4rem, 5.5vw, 4rem);
+      font-weight: 900;
+      color: #ffd166;
+      text-shadow: 0 0 10px #ffcc33, 0 0 22px #ff9800, 0 0 35px rgba(255, 152, 0, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+      text-align: center;
+      width: 100%;
+      top: 48%;
+      animation: aparecer 6s ease-in-out forwards;
+      transform: translateY(-50%);
+      padding: 0 18px;
+      box-sizing: border-box;
+    }
+
+    @keyframes aparecer {
+      0% { opacity: 0; transform: translateY(-50%) scale(0.5); }
+      20% { opacity: 1; transform: translateY(-50%) scale(1.08); }
+      30%, 80% { opacity: 1; transform: translateY(-50%) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) scale(0.5); }
+    }
+
+    #dedicatoria {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      right: 22px;
+      z-index: 10;
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.2rem, 4.2vw, 2.8rem);
+      color: #ffffff;
+      text-shadow: 0 0 12px #ffb703;
+      opacity: 0.92;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .estrella, .chispa {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .estrella {
+      background-color: #ffffff;
+      animation: titilar 5s infinite alternate;
+    }
+
+    .chispa {
+      background-color: #ffd166;
+      box-shadow: 0 0 10px #ffd166;
+      animation: caer 7s linear infinite;
+    }
+
+    @keyframes titilar {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes caer {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .worker-icon {
+      position: fixed;
+      z-index: 4;
+      font-size: clamp(2rem, 7vw, 5rem);
+      opacity: 0.2;
+      pointer-events: none;
+      animation: balanceo 5s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(255, 209, 102, 0.45));
+    }
+
+    .worker-icon.left { left: 7%; bottom: 14%; }
+    .worker-icon.right { right: 7%; bottom: 15%; animation-delay: 1s; }
+    .worker-icon.top { right: 10%; top: 28%; animation-delay: 2s; }
+
+    @keyframes balanceo {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-14px) rotate(4deg); }
+    }
+
+    #play-button {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      background: linear-gradient(135deg, #ffd166, #f77f00);
+      color: #1b1b1b;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(255, 183, 3, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    #play-button:active {
+      transform: translate(-50%, -50%) scale(0.96);
+    }
+
+    .city-line {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 16vh;
+      z-index: 2;
+      pointer-events: none;
+      background:
+        linear-gradient(to top, #05070c 0%, rgba(5, 7, 12, 0.95) 60%, transparent 61%),
+        repeating-linear-gradient(90deg, transparent 0 28px, rgba(255, 209, 102, 0.45) 29px 32px, transparent 33px 70px);
+      clip-path: polygon(0 45%, 5% 45%, 5% 25%, 12% 25%, 12% 55%, 18% 55%, 18% 18%, 27% 18%, 27% 50%, 34% 50%, 34% 30%, 43% 30%, 43% 56%, 51% 56%, 51% 20%, 60% 20%, 60% 52%, 68% 52%, 68% 26%, 76% 26%, 76% 58%, 85% 58%, 85% 34%, 93% 34%, 93% 55%, 100% 55%, 100% 100%, 0 100%);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fireworks"></canvas>
+
+  <div class="hero-title">
+    <h1>Feliz Día</h1>
+    <p>Un homenaje a tu vocación, tu escucha y la forma tan especial en que acompañas a otros.</p>
+  </div>
+
+  <div class="worker-icon left">🧠</div>
+  <div class="worker-icon right">💬</div>
+  <div class="worker-icon top">🌱</div>
+  <div class="city-line"></div>
+
+  <div id="dedicatoria">Por tu vocación, tu ternura y tu forma de acompañar: te quiero.</div>
+  <button id="play-button">Toca para comenzar</button>
+
+  <!-- Música de fondo opcional. Deja el archivo con este nombre o cambia la ruta. -->
+  <audio id="musica" preload="auto" loop>
+    <source src="assets/audio/musica.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const fireworks = [];
+    const musica = document.getElementById("musica");
+    const playButton = document.getElementById("play-button");
+
+    const vueloSounds = [
+      new Audio("assets/audio/ascenso1.mp3"),
+      new Audio("assets/audio/ascenso2.mp3")
+    ];
+
+    const explosionSounds = [
+      new Audio("assets/audio/explosion1.mp3"),
+      new Audio("assets/audio/explosion2.mp3"),
+      new Audio("assets/audio/explosion3.mp3"),
+      new Audio("assets/audio/explosion4.mp3")
+    ];
+
+    musica.volume = 0.28;
+    vueloSounds.forEach(sound => {
+      sound.volume = 0.4;
+      sound.preload = "auto";
+    });
+    explosionSounds.forEach(sound => {
+      sound.volume = 0.5;
+      sound.preload = "auto";
+    });
+
+    const mensajesEspeciales = [
+      "Feliz día a una psicóloga maravillosa",
+      "Te quiero por la persona hermosa que eres.",
+      "Tu escucha también abraza y acompaña",
+      "Gracias por ayudar a otros a encontrar calma",
+      "Tu vocación deja huellas de esperanza",
+      "Te quiero y admiro la luz que entregas",
+      "Tu vocación es un regalo para quienes te rodean",
+      "Gracias por escuchar con el corazón",
+      "Acompañas procesos con amor, paciencia y dedicación",
+      "Tu forma de ayudar también sana",
+      "Eres una persona que acompaña con el alma",
+      "Tu presencia da calma, confianza y contención",
+      "Tu manera de acompañar hace una diferencia real",
+      "Eres una mujer maravillosa, sensible y fuerte.",
+      "Te admiro por cómo acompañas a otros con tanto amor."
+    ];
+
+    const frasesFlotantes = [
+      "Te quiero 😍",
+      "Eres la mejor 🌹",
+      "Eres luz ✨",
+      "Psicóloga hermosa ❤️",
+      "Te quiero"
+    ];
+
+    const coloresTrabajo = [
+      "#ffd166", "#fcbf49", "#f77f00", "#eae2b7", "#90e0ef",
+      "#48cae4", "#00b4d8", "#caf0f8", "#ffffff"
+    ];
+
+    let indiceMensajeActual = 0;
+    let intervaloMensajes;
+    let intervaloFireworks;
+    let tiempoEntreFireworks = 2300;
+    let contadorSonidosFireworks = 0;
+    const maxSonidosFireworks = 10;
+    let experienciaIniciada = false;
+
+    function crearFondoAnimado() {
+      for (let i = 0; i < 90; i++) {
+        const estrella = document.createElement("div");
+        estrella.className = "estrella";
+        estrella.style.width = `${Math.random() * 3 + 1}px`;
+        estrella.style.height = estrella.style.width;
+        estrella.style.left = `${Math.random() * 100}%`;
+        estrella.style.top = `${Math.random() * 100}%`;
+        estrella.style.animationDelay = `${Math.random() * 5}s`;
+        estrella.style.opacity = Math.random() * 0.5 + 0.1;
+        document.body.appendChild(estrella);
+      }
+
+      for (let i = 0; i < 30; i++) {
+        const chispa = document.createElement("div");
+        chispa.className = "chispa";
+        const size = Math.random() * 4 + 2;
+        chispa.style.width = `${size}px`;
+        chispa.style.height = `${size}px`;
+        chispa.style.left = `${Math.random() * 100}%`;
+        chispa.style.top = `${Math.random() * -100}%`;
+        chispa.style.animationDelay = `${Math.random() * 7}s`;
+        chispa.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        document.body.appendChild(chispa);
+      }
+    }
+
+    function iniciarExperiencia(event) {
+      if (event) event.stopPropagation();
+      if (experienciaIniciada) return;
+      experienciaIniciada = true;
+
+      playButton.style.display = "none";
+      crearFondoAnimado();
+      activarMusica();
+    }
+
+    function activarMusica() {
+      const playPromise = musica.play();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Si no existe el archivo de música, la animación sigue funcionando igual.
+        });
+      }
+
+      iniciarSecuenciaMensajes();
+      iniciarSecuenciaFireworks();
+    }
+
+    function iniciarSecuenciaMensajes() {
+      mostrarMensajeEspecial(mensajesEspeciales[indiceMensajeActual]);
+      indiceMensajeActual++;
+
+      intervaloMensajes = setInterval(() => {
+        if (indiceMensajeActual < mensajesEspeciales.length) {
+          mostrarMensajeEspecial(mensajesEspeciales[indiceMensajeActual]);
+          indiceMensajeActual++;
+        } else {
+          indiceMensajeActual = 0;
+          clearInterval(intervaloMensajes);
+          setTimeout(iniciarSecuenciaMensajes, 7500);
+        }
+      }, 6000);
+    }
+
+    function iniciarSecuenciaFireworks() {
+      lanzarFuegoAleatorio();
+      intervaloFireworks = setInterval(() => {
+        lanzarFuegoAleatorio();
+      }, tiempoEntreFireworks);
+    }
+
+    function lanzarFuegoAleatorio(x, y) {
+      const posX = x || random(canvas.width * 0.18, canvas.width * 0.82);
+      const posY = y || random(canvas.height * 0.22, canvas.height * 0.56);
+      fireworks.push(new Firework(posX, posY));
+    }
+
+    function mostrarMensajeEspecial(mensaje) {
+      const mensajeElement = document.createElement("div");
+      mensajeElement.className = "mensaje-especial";
+      mensajeElement.innerText = mensaje;
+      document.body.appendChild(mensajeElement);
+
+      setTimeout(() => {
+        mensajeElement.remove();
+      }, 6000);
+    }
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class ToolParticle {
+      constructor(x, y, angle, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = Math.cos(angle) * random(2, 7);
+        this.vy = Math.sin(angle) * random(2, 7);
+        this.alpha = 1;
+        this.color = color;
+        this.size = random(3, 7);
+        this.rotation = random(0, Math.PI * 2);
+        this.rotationSpeed = random(-0.08, 0.08);
+        this.shape = Math.floor(random(0, 4));
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vx *= 0.975;
+        this.vy *= 0.975;
+        this.vy += 0.035;
+        this.alpha -= 0.006;
+        this.rotation += this.rotationSpeed;
+      }
+
+      draw() {
+        if (this.alpha <= 0) return;
+
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 2;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 12;
+
+        if (this.shape === 0) {
+          ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        } else if (this.shape === 1) {
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (this.shape === 2) {
+          ctx.beginPath();
+          ctx.moveTo(0, -this.size);
+          ctx.lineTo(this.size, this.size);
+          ctx.lineTo(-this.size, this.size);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(-this.size, 0);
+          ctx.lineTo(this.size, 0);
+          ctx.moveTo(0, -this.size);
+          ctx.lineTo(0, this.size);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    class Firework {
+      constructor(x, y) {
+        this.x = x || random(canvas.width * 0.2, canvas.width * 0.8);
+        this.y = canvas.height;
+        this.targetY = y || random(canvas.height * 0.2, canvas.height * 0.5);
+        this.exploded = false;
+        this.particles = [];
+        this.color = coloresTrabajo[Math.floor(random(0, coloresTrabajo.length))];
+        this.speed = random(3, 5);
+        this.size = random(3, 6);
+        this.sparkles = [];
+        this.vueloSound = null;
+        this.explosionSoundPlayed = false;
+
+        if (contadorSonidosFireworks < maxSonidosFireworks) {
+          this.playVueloSound();
+        }
+
+        for (let i = 0; i < 6; i++) {
+          this.sparkles.push({
+            x: this.x,
+            y: this.y,
+            size: random(1, 3),
+            alpha: 1
+          });
+        }
+      }
+
+      playVueloSound() {
+        this.vueloSound = vueloSounds[Math.floor(Math.random() * vueloSounds.length)];
+        this.vueloSound.currentTime = 0;
+        this.vueloSound.play().catch(() => {});
+      }
+
+      update() {
+        if (!this.exploded) {
+          this.y -= this.speed;
+
+          this.sparkles.forEach(spark => {
+            spark.x += random(-1.3, 1.3);
+            spark.y -= this.speed * 0.75;
+            spark.alpha -= 0.025;
+          });
+
+          if (Math.random() < 0.35) {
+            this.sparkles.push({
+              x: this.x,
+              y: this.y,
+              size: random(1, 3),
+              alpha: 1
+            });
+          }
+
+          this.sparkles = this.sparkles.filter(spark => spark.alpha > 0);
+
+          if (this.y <= this.targetY) {
+            this.explode();
+            if (this.vueloSound) {
+              this.vueloSound.pause();
+            }
+          }
+        }
+
+        this.particles.forEach(p => p.update());
+        this.particles = this.particles.filter(p => p.alpha > 0);
+      }
+
+      explode() {
+        this.exploded = true;
+
+        if (contadorSonidosFireworks < maxSonidosFireworks && !this.explosionSoundPlayed) {
+          const randomSound = explosionSounds[Math.floor(Math.random() * explosionSounds.length)];
+          randomSound.currentTime = 0;
+          randomSound.play().catch(() => {});
+          this.explosionSoundPlayed = true;
+          contadorSonidosFireworks++;
+        }
+
+        for (let a = 0; a < Math.PI * 2; a += 0.08) {
+          this.particles.push(new ToolParticle(this.x, this.y, a, this.color));
+        }
+
+        for (let i = 0; i < 4; i++) {
+          crearTextoTrabajo(
+            this.x + random(-100, 100),
+            this.y + random(-55, 55),
+            coloresTrabajo[Math.floor(random(0, coloresTrabajo.length))]
+          );
+        }
+      }
+
+      draw() {
+        if (!this.exploded) {
+          this.sparkles.forEach(spark => {
+            ctx.beginPath();
+            ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
+            ctx.fillStyle = hexToRgba(this.color, spark.alpha);
+            ctx.fill();
+          });
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowColor = this.color;
+          ctx.shadowBlur = 18;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y + this.size);
+          ctx.lineTo(this.x - this.size / 2, this.y + this.size * 3);
+          ctx.lineTo(this.x + this.size / 2, this.y + this.size * 3);
+          ctx.closePath();
+          ctx.fillStyle = hexToRgba(this.color, 0.7);
+          ctx.fill();
+        }
+
+        this.particles.forEach(p => p.draw());
+      }
+    }
+
+    function crearTextoTrabajo(x, y, color) {
+      const texto = document.createElement("div");
+      texto.className = "frase-trabajo";
+      texto.innerText = frasesFlotantes[Math.floor(random(0, frasesFlotantes.length))];
+      texto.style.left = `${x}px`;
+      texto.style.top = `${y}px`;
+      texto.style.color = color;
+      texto.style.animationDuration = `${random(6, 10)}s`;
+      document.body.appendChild(texto);
+      setTimeout(() => texto.remove(), 10000);
+    }
+
+    function hexToRgba(hex, alpha) {
+      const cleanHex = hex.replace('#', '');
+      const bigint = parseInt(cleanHex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function getTouchPos(e) {
+      if (e.touches && e.touches.length > 0) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    document.addEventListener("click", e => {
+      if (!experienciaIniciada) return;
+      const pos = getTouchPos(e);
+      lanzarFuegoAleatorio(pos.x, pos.y);
+    });
+
+    document.addEventListener("touchstart", e => {
+      if (!experienciaIniciada) return;
+      e.preventDefault();
+      const pos = getTouchPos(e);
+      lanzarFuegoAleatorio(pos.x, pos.y);
+    }, { passive: false });
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    playButton.addEventListener("click", iniciarExperiencia);
+    playButton.addEventListener("touchstart", iniciarExperiencia, { passive: true });
+
+    function animate() {
+      ctx.fillStyle = "rgba(7, 17, 31, 0.16)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        const x = random(0, canvas.width);
+        const y = random(0, canvas.height);
+        const size = random(0.5, 2.2);
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 209, 102, ${random(0.08, 0.45)})`;
+        ctx.fill();
+      }
+
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        fireworks[i].update();
+        fireworks[i].draw();
+
+        if (fireworks[i].exploded && fireworks[i].particles.length === 0) {
+          fireworks.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
